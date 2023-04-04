@@ -21,6 +21,10 @@ class Player {
         this._vote = vote;
     }
 
+    get lives() {
+        return this._lives;
+    }
+
     get data() {
         return {
             name: this._name,
