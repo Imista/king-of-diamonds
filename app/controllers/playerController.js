@@ -3,23 +3,27 @@ const { Player } = require("../models/playerModel");
 function playerController() {
     const players = {};
 
-    function addPlayer(id) {
+    function add(id) {
         players[id] = new Player();
     }
 
-    function playerVote(id, vote) {
+    function vote(id, vote) {
         players[id].vote = vote;
     }
 
-    function playerDamage(id, damage) {
-        players[id].damage = damage;
+    function damage(id, damage) {
+        players[id].getDamage(damage);
     }
 
-    function alivePlayer() {
+    function alives() {
         return Object.values(players).filter(({ lives }) => lives).length;
     }
 
-    return { addPlayer, alivePlayer, playerVote, playerDamage };
+    function data() {
+        return Object.values(players);
+    }
+
+    return { add, alives, data, vote, damage };
 }
 
 module.exports = { playerController };
