@@ -3,8 +3,7 @@ const { playerController } = require("./playerController");
 function tableController(httpServer) {
     const { Server } = require("socket.io");
     const io = new Server(httpServer);
-    const players = playerController();
-    const tables = [];
+    const tables = {};
 
     io.on("connection", (socket) => {
         //Create table
@@ -13,9 +12,8 @@ function tableController(httpServer) {
                 .toString(16)
                 .slice(0, 5);
 
-            players.add(id);
-
-            tables.push(code);
+            tables[code] = playerController();
+            tables[code].add(id);
             socket.join(code);
 
             io.to(socket.id).emit("connected_table", code);
@@ -23,22 +21,24 @@ function tableController(httpServer) {
 
         //Connect table
         socket.on("connect_table", ({ id, code }) => {
-            if (tables.indexOf(code) < 0)
+            if (Object.keys(tables).indexOf(code) < 0)
                 io.to(socket.id).emit(
                     "error_table",
                     `The table with code ${code} does not exist.`
                 );
             else {
-                players.add(id);
+                tables[code].add(id);
                 socket.join(code);
-                io.to(code).emit("new_player", players.data());
+
+                io.to(socket.id).emit("connected_table", code);
+                io.to(code).emit("new_player", tables[code].data());
             }
         });
 
-        socket.on("vote", ({ id, vote }) => {
+        socket.on("vote", ({ id, table: code, vote }) => {
             console.log(id, " has voted.");
-            players.vote(id, vote);
-            console.log(players.data());
+            tables[code].vote(id, vote);
+            console.log(tables[code].data());
         });
     });
 }
