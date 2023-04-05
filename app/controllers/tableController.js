@@ -11,6 +11,12 @@ function tableController(httpServer) {
         players.add(socket.id);
 
         console.log(players.data());
+
+        socket.on("vote", ({ id, vote }) => {
+            console.log(id, " has voted.");
+            players.vote(id, vote);
+            console.log(players.data());
+        });
     });
 }
 

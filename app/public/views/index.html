@@ -8,11 +8,13 @@
 </head> 
 <body>
     <h1>HELLO :)</h1>
+    <div class="vote-area">
+        <label for="vote-input">Your vote:</label>
+        <input type="number" id="vote-input">
+        <button id="vote">Vote</button>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-        
-    </script>
+    <script src="js/home.js"></script>
 </body>
 </html>
