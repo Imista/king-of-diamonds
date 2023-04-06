@@ -1,28 +1,41 @@
 const socket = io();
-const data = {
-    id: Math.floor(Math.random() * Date.now()).toString(16),
-};
-
 const stateText = document.querySelector("#state");
 const createTableButton = document.querySelector("#create-table");
 const joinTableButton = document.querySelector("#join-table");
 const tableInput = document.querySelector("#table-input");
-
 const voteButton = document.querySelector("#vote");
 const voteInput = document.querySelector("#vote-input");
 
-//Connection
+const playerData = {
+    id: Math.floor(Math.random() * Date.now()).toString(16),
+};
+
+//Client events
 createTableButton.addEventListener("click", () => {
-    socket.emit("create_table", data.id);
+    socket.emit("create_table", playerData.id);
 });
 
 joinTableButton.addEventListener("click", () => {
-    socket.emit("connect_table", { id: data.id, tableCode: tableInput.value });
+    socket.emit("connect_table", {
+        id: playerData.id,
+        tableCode: tableInput.value,
+    });
 });
 
-socket.on("connected_table", (tableCode) => {
+voteButton.addEventListener("click", () => {
+    const vote = parseInt(voteInput.value);
+    socket.emit("vote", {
+        ...playerData,
+        vote,
+    });
+
+    voteInput.value = "";
+});
+
+//Server events
+function connectedTableEvent(tableCode) {
     stateText.textContent = `connected to ${tableCode}`;
-    data.tableCode = tableCode;
+    playerData.tableCode = tableCode;
     //Disable
     tableInput.value = "";
     tableInput.disabled = true;
@@ -31,22 +44,15 @@ socket.on("connected_table", (tableCode) => {
 
     voteButton.disabled = false;
     voteInput.disabled = false;
+}
+
+socket.on("connected_table", (tableCode) => {
+    connectedTableEvent(tableCode);
 });
 
-//New player
-socket.on("new_player", (data) => {
-    console.log(data);
+socket.on("new_player", (playerData) => {
+    console.log(playerData);
 });
 socket.on("error_table", (msg) => {
     alert(msg);
-});
-
-//Vote
-voteButton.addEventListener("click", () => {
-    socket.emit("vote", {
-        ...data,
-        vote: parseInt(voteInput.value),
-    });
-
-    voteInput.value = "";
 });
