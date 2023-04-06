@@ -28,9 +28,26 @@ function connectTableEvent({ tables, socket, id, tableCode }) {
 }
 
 function voteEvent({ id, tables, tableCode, vote }) {
+    const table = tables[tableCode];
+
     console.log(id, " has voted.");
-    tables[tableCode].vote(id, vote);
-    console.log(tables[tableCode].data());
+    table.vote(id, vote);
+    if (table.everyVoted()) {
+        const winVote = getWinVote(table.votes());
+        console.log(table.results(winVote));
+    }
+}
+
+function getWinVote(votes) {
+    const winNumber = Math.round(
+        (votes.reduce((sum, vote) => (sum += vote)) / votes.length) * 0.8
+    );
+    const closestVote = votes.reduce((closest, vote) =>
+        Math.abs(vote - winNumber) < Math.abs(closest - winNumber)
+            ? vote
+            : closest
+    );
+    return closestVote;
 }
 
 module.exports = { createTableEvent, connectTableEvent, voteEvent };
