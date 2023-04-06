@@ -20,7 +20,7 @@ function playerController() {
     }
 
     function data() {
-        return Object.values(players).map((x) => x.data);
+        return Object.values(players).map(({ data }) => data);
     }
 
     return { add, alives, data, vote, damage };

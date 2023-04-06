@@ -17,12 +17,12 @@ createTableButton.addEventListener("click", () => {
 });
 
 joinTableButton.addEventListener("click", () => {
-    socket.emit("connect_table", { id: data.id, code: tableInput.value });
+    socket.emit("connect_table", { id: data.id, tableCode: tableInput.value });
 });
 
-socket.on("connected_table", (table) => {
-    stateText.textContent = `connected to ${table}`;
-    data.table = table;
+socket.on("connected_table", (tableCode) => {
+    stateText.textContent = `connected to ${tableCode}`;
+    data.tableCode = tableCode;
     //Disable
     tableInput.value = "";
     tableInput.disabled = true;

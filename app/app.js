@@ -3,7 +3,7 @@ const express = require("express");
 const path = require("path");
 const { router } = require("./routes");
 const { createServer } = require("http");
-const { tableController } = require("./controllers/tableController");
+const { server } = require("./server");
 
 const app = express();
 const httpServer = createServer(app);
@@ -25,6 +25,6 @@ httpServer.listen(app.get("port"), () => {
 });
 
 //Call socket.io server
-tableController(httpServer);
+server(httpServer);
 
 //Add routes
