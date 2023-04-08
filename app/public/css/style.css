@@ -36,6 +36,14 @@ header h1 {
     cursor: pointer;
 }
 
+.start-table-area{
+    margin-top: 16px;
+}
+
+.start-table-area button{
+    width: 200px;
+}
+
 /* Estilos del área de votación */
 .vote-area {
     margin: 20px;

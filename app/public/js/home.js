@@ -2,6 +2,7 @@ const socket = io();
 const stateText = document.querySelector("#state");
 const createTableButton = document.querySelector("#create-table");
 const joinTableButton = document.querySelector("#join-table");
+const startTableButton = document.querySelector("#start-table");
 const tableInput = document.querySelector("#table-input");
 const voteButton = document.querySelector("#vote");
 const voteInput = document.querySelector("#vote-input");
@@ -24,6 +25,7 @@ const disableTable = () => {
     tableInput.disabled = true;
     joinTableButton.disabled = true;
     createTableButton.disabled = true;
+    startTableButton.disabled = true;
 };
 const enableTable = () => {
     tableInput.disabled = false;
@@ -54,36 +56,26 @@ voteButton.addEventListener("click", () => {
     disableVote();
 });
 
+startTableButton.addEventListener("click", () => {
+    console.log("A");
+    socket.emit("start_table", playerData.tableCode);
+});
+
 //Server events
 function connectedTableEvent({ tableCode, playersData }) {
     stateText.textContent = `connected to ${tableCode}`;
     playerData.tableCode = tableCode;
-    //Disable
+
     tableInput.value = "";
     disableTable();
-    enableVote();
+    startTableButton.disabled = false;
 
-    for (const { name, lives } of playersData) {
-        const player = document.createRange().createContextualFragment(`
-        <div class="player">
-            <div class="player-img-container">
-                <img src="https://robohash.org/${name}.png" alt="" class="player-img">
-            </div>
-            <div class="player-lives-container">
-                <p class="player-lives">${lives}</p>
-            </div>
-        </div>
-    
-        `);
-        playersArea.append(player);
+    for (const newPlayerData of playersData) {
+        newPlayer(newPlayerData);
     }
 }
 
-socket.on("connected_table", (data) => {
-    connectedTableEvent(data);
-});
-
-socket.on("new_player", ({ name, lives }) => {
+function newPlayer({ name, lives }) {
     const player = document.createRange().createContextualFragment(`
     <div class="player">
         <div class="player-img-container">
@@ -93,9 +85,23 @@ socket.on("new_player", ({ name, lives }) => {
             <p class="player-lives">${lives}</p>
         </div>
     </div>
-`);
+
+    `);
     playersArea.append(player);
+}
+
+socket.on("connected_table", (data) => {
+    connectedTableEvent(data);
+});
+
+socket.on("new_player", (newPlayerData) => {
+    newPlayer(newPlayerData);
 });
 socket.on("error_table", (msg) => {
     alert(msg);
+});
+
+socket.on("start_table", () => {
+    enableVote();
+    disableTable();
 });

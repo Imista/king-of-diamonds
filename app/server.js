@@ -2,6 +2,7 @@ const {
     createTableEvent,
     connectTableEvent,
     voteEvent,
+    startTableEvent,
 } = require("./controllers/tableController");
 
 function server(httpServer) {
@@ -18,6 +19,10 @@ function server(httpServer) {
         //Connect table
         socket.on("connect_table", ({ id, tableCode }) => {
             connectTableEvent({ tables, socket, id, tableCode });
+        });
+
+        socket.on("start_table", (tableCode) => {
+            startTableEvent({ tables, socket, tableCode });
         });
 
         socket.on("vote", ({ id, tableCode, vote }) => {

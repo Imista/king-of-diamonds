@@ -1,47 +1,58 @@
 const { playerController } = require("./playerController");
 
+const MINIMUM_PLAYERS = 5;
+
 function createTableEvent({ tables, socket, id }) {
     const tableCode = Math.floor(Math.random() * Date.now())
         .toString(16)
         .slice(0, 5);
-
-    tables[tableCode] = playerController();
-    tables[tableCode].add(id);
-
+    const table = playerController();
+    table.add(id);
+    tables[tableCode] = table;
     socket.join(tableCode);
     socket.emit("connected_table", {
         tableCode,
-        playersData: tables[tableCode].data(),
+        playersData: table.data(),
     });
 }
 
 function connectTableEvent({ tables, socket, id, tableCode }) {
     if (tables.hasOwnProperty(tableCode)) {
-        tables[tableCode].add(id);
-
-        socket.to(tableCode).emit("new_player", tables[tableCode].data(id));
+        const table = tables[tableCode];
+        table.add(id);
+        socket.to(tableCode).emit("new_player", table.data(id));
         socket.join(tableCode);
         socket.emit("connected_table", {
             tableCode,
-            playersData: tables[tableCode].data(),
+            playersData: table.data(),
         });
     } else {
-        socket.emit(
-            "error_table",
-            `The table with tableCode ${tableCode} does not exist.`
+        sendErrorMessage(
+            socket,
+            `The table with code ${tableCode} does not exist.`
         );
     }
 }
 
+function startTableEvent({ tables, socket, tableCode }) {
+    if (tables[tableCode].alives() >= MINIMUM_PLAYERS) {
+        socket.to(tableCode).emit("start_table");
+        socket.emit("start_table");
+    } else
+        sendErrorMessage(socket, `The table needs minimun 5 players to start.`);
+}
+
 function voteEvent({ id, tables, tableCode, vote }) {
     const table = tables[tableCode];
-
-    console.log(id, " has voted.");
     table.vote(id, vote);
     if (table.everyVoted()) {
         const winVote = getWinVote(table.votes());
         console.log(table.results(winVote));
     }
+}
+
+function sendErrorMessage(socket, message) {
+    socket.emit("error_table", message);
 }
 
 function getWinVote(votes) {
@@ -56,4 +67,9 @@ function getWinVote(votes) {
     return closestVote;
 }
 
-module.exports = { createTableEvent, connectTableEvent, voteEvent };
+module.exports = {
+    createTableEvent,
+    connectTableEvent,
+    startTableEvent,
+    voteEvent,
+};
