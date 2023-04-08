@@ -1,0 +1,105 @@
+/* Estilos generales */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background-color: #f2f2f2;
+}
+
+/* Estilos del encabezado */
+header {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+/* Estilos del área de la mesa */
+.table-area {
+    margin: 20px;
+}
+
+.table-area button, .table-area input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.table-area button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+/* Estilos del área de votación */
+.vote-area {
+    margin: 20px;
+}
+
+.vote-area label, .vote-area input[type="number"], .vote-area button {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.vote-area label {
+    margin-right: 5px;
+}
+
+.vote-area input[type="number"] {
+    width: 50px;
+}
+
+.vote-area button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+/* Estilos de la zona de los jugadores */
+.players-area {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px;
+}
+
+.player {
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+    width: 150px;
+    text-align: center;
+}
+
+.player img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.player p {
+    margin: 5px;
+    font-size: 16px;
+}
+
+.player-name {
+    font-weight: bold;
+}
+
+.player-lives {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4CAF50;
+}

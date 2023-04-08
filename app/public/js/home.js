@@ -5,9 +5,30 @@ const joinTableButton = document.querySelector("#join-table");
 const tableInput = document.querySelector("#table-input");
 const voteButton = document.querySelector("#vote");
 const voteInput = document.querySelector("#vote-input");
+const playersArea = document.querySelector(".players-area");
 
 const playerData = {
     id: Math.floor(Math.random() * Date.now()).toString(16),
+};
+
+//Functions
+const disableVote = () => {
+    voteButton.disabled = true;
+    voteInput.disabled = true;
+};
+const enableVote = () => {
+    voteButton.disabled = false;
+    voteInput.disabled = false;
+};
+const disableTable = () => {
+    tableInput.disabled = true;
+    joinTableButton.disabled = true;
+    createTableButton.disabled = true;
+};
+const enableTable = () => {
+    tableInput.disabled = false;
+    joinTableButton.disabled = false;
+    createTableButton.disabled = false;
 };
 
 //Client events
@@ -30,28 +51,43 @@ voteButton.addEventListener("click", () => {
     });
 
     voteInput.value = "";
+    disableVote();
 });
 
 //Server events
-function connectedTableEvent(tableCode) {
+function connectedTableEvent({ tableCode, playersData }) {
     stateText.textContent = `connected to ${tableCode}`;
     playerData.tableCode = tableCode;
     //Disable
     tableInput.value = "";
-    tableInput.disabled = true;
-    joinTableButton.disabled = true;
-    createTableButton.disabled = true;
+    disableTable();
+    enableVote();
 
-    voteButton.disabled = false;
-    voteInput.disabled = false;
+    for (const { name, lives } of playersData) {
+        const player = document.createRange().createContextualFragment(`
+            <div class="player">
+                <p class="player-name">${name}</p>
+                <img src="https://robohash.org/${name}.png" alt="" class="player-img">
+                <p class="player-lives">${lives}</p>
+            </div>
+        `);
+        playersArea.append(player);
+    }
 }
 
-socket.on("connected_table", (tableCode) => {
-    connectedTableEvent(tableCode);
+socket.on("connected_table", (data) => {
+    connectedTableEvent(data);
 });
 
-socket.on("new_player", (playerData) => {
-    console.log(playerData);
+socket.on("new_player", (newPlayerData) => {
+    const player = document.createRange().createContextualFragment(`
+    <div class="player">
+        <p class="player-name">${newPlayerData.name}</p>
+        <img src="https://robohash.org/${newPlayerData.name}.png" alt="" class="player-img">
+        <p class="player-lives">${newPlayerData.lives}</p>
+    </div>
+`);
+    playersArea.append(player);
 });
 socket.on("error_table", (msg) => {
     alert(msg);

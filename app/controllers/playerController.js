@@ -16,12 +16,12 @@ function playerController() {
     }
 
     function results(winVote) {
-        const winners = Object.values(players).filter(
-            ({ vote }) => vote == winVote
-        );
-        const loosers = Object.values(players).filter(
-            ({ vote }) => vote != winVote
-        );
+        const winners = Object.values(players)
+            .filter(({ vote }) => vote == winVote)
+            .map(({ data }) => data);
+        const loosers = Object.values(players)
+            .filter(({ vote }) => vote != winVote)
+            .map(({ data }) => data);
         return { winners, loosers };
     }
 
@@ -37,8 +37,9 @@ function playerController() {
         return Object.values(players).every(({ vote }) => vote != -1);
     }
 
-    function data() {
-        return Object.values(players).map(({ data }) => data);
+    function data(id) {
+        if (!id) return Object.values(players).map(({ data }) => data);
+        else return players[id].data;
     }
 
     return { add, alives, data, vote, votes, results, damage, everyVoted };

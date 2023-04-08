@@ -9,16 +9,22 @@ function createTableEvent({ tables, socket, id }) {
     tables[tableCode].add(id);
 
     socket.join(tableCode);
-    socket.emit("connected_table", tableCode);
+    socket.emit("connected_table", {
+        tableCode,
+        playersData: tables[tableCode].data(),
+    });
 }
 
 function connectTableEvent({ tables, socket, id, tableCode }) {
     if (tables.hasOwnProperty(tableCode)) {
         tables[tableCode].add(id);
 
+        socket.to(tableCode).emit("new_player", tables[tableCode].data(id));
         socket.join(tableCode);
-        socket.emit("connected_table", tableCode);
-        socket.to(tableCode).emit("new_player", tables[tableCode].data());
+        socket.emit("connected_table", {
+            tableCode,
+            playersData: tables[tableCode].data(),
+        });
     } else {
         socket.emit(
             "error_table",
