@@ -19,10 +19,10 @@ function playerController() {
         const winners = Object.values(players)
             .filter(({ vote }) => vote == winVote)
             .map(({ data }) => data);
-        const loosers = Object.values(players)
+        const losers = Object.values(players)
             .filter(({ vote }) => vote != winVote)
             .map(({ data }) => data);
-        return { winners, loosers };
+        return { winners, losers };
     }
 
     function damage(id, damage) {

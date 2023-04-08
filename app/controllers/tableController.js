@@ -1,6 +1,6 @@
 const { playerController } = require("./playerController");
 
-const MINIMUM_PLAYERS = 5;
+const MINIMUM_PLAYERS = 2;
 
 function createTableEvent({ tables, socket, id }) {
     const tableCode = Math.floor(Math.random() * Date.now())
@@ -34,20 +34,20 @@ function connectTableEvent({ tables, socket, id, tableCode }) {
     }
 }
 
-function startTableEvent({ tables, socket, tableCode }) {
+function startTableEvent({ io, tables, socket, tableCode }) {
     if (tables[tableCode].alives() >= MINIMUM_PLAYERS) {
-        socket.to(tableCode).emit("start_table");
-        socket.emit("start_table");
+        io.to(tableCode).emit("start_table");
     } else
         sendErrorMessage(socket, `The table needs minimun 5 players to start.`);
 }
 
-function voteEvent({ id, tables, tableCode, vote }) {
+function voteEvent({ io, id, tables, tableCode, vote }) {
     const table = tables[tableCode];
     table.vote(id, vote);
     if (table.everyVoted()) {
         const winVote = getWinVote(table.votes());
-        console.log(table.results(winVote));
+        const results = table.results(winVote);
+        io.to(tableCode).emit("results", results);
     }
 }
 

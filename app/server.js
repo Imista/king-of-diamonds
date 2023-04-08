@@ -22,11 +22,11 @@ function server(httpServer) {
         });
 
         socket.on("start_table", (tableCode) => {
-            startTableEvent({ tables, socket, tableCode });
+            startTableEvent({ io, tables, socket, tableCode });
         });
 
         socket.on("vote", ({ id, tableCode, vote }) => {
-            voteEvent({ id, tables, tableCode, vote });
+            voteEvent({ io, id, tables, tableCode, vote });
         });
     });
 }

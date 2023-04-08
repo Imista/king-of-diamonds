@@ -70,19 +70,19 @@ function connectedTableEvent({ tableCode, playersData }) {
     disableTable();
     startTableButton.disabled = false;
 
-    for (const newPlayerData of playersData) {
-        newPlayer(newPlayerData);
+    for (const { name } of playersData) {
+        newPlayer(name);
     }
 }
 
-function newPlayer({ name, lives }) {
+function newPlayer(name, text = "-", isWinner = false) {
     const player = document.createRange().createContextualFragment(`
-    <div class="player">
+    <div class="player ${isWinner && "winner"}">
         <div class="player-img-container">
             <img src="https://robohash.org/${name}.png" alt="" class="player-img">
         </div>
         <div class="player-lives-container">
-            <p class="player-lives">${lives}</p>
+            <p class="player-lives">${text}</p>
         </div>
     </div>
 
@@ -94,8 +94,8 @@ socket.on("connected_table", (data) => {
     connectedTableEvent(data);
 });
 
-socket.on("new_player", (newPlayerData) => {
-    newPlayer(newPlayerData);
+socket.on("new_player", ({ name }) => {
+    newPlayer(name);
 });
 socket.on("error_table", (msg) => {
     alert(msg);
@@ -104,4 +104,14 @@ socket.on("error_table", (msg) => {
 socket.on("start_table", () => {
     enableVote();
     disableTable();
+});
+
+socket.on("results", ({ winners, losers }) => {
+    playersArea.innerHTML = "";
+    winners.forEach(({ name, vote }) => {
+        newPlayer(name, vote, true);
+    });
+    losers.forEach(({ name, vote }) => {
+        newPlayer(name, vote);
+    });
 });
