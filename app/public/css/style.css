@@ -68,38 +68,49 @@ header h1 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     margin: 20px;
-}
-
-.player {
+  }
+  
+  .player {
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+    width: 120px;
+  }
+  
+  .player-img-container {
     border: 1px solid #ccc;
     background-color: white;
     border-radius: 5px;
-    margin: 10px;
-    padding: 10px;
-    width: 150px;
-    text-align: center;
-}
-
-.player img {
     width: 80px;
     height: 80px;
+    margin: 0 auto 10px;
+    overflow: hidden;
+  }
+  
+  .player-img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border-radius: 50%;
-    margin-bottom: 10px;
-}
-
-.player p {
-    margin: 5px;
+  }
+  
+  .player-lives-container {
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px auto 0px;
+    margin-top: 5px;
+    width: 80px;
+    height: 30px;
+  }
+  
+  .player-lives {
     font-size: 16px;
-}
-
-.player-name {
-    font-weight: bold;
-}
-
-.player-lives {
-    font-size: 24px;
     font-weight: bold;
     color: #4CAF50;
-}
+  }
+  

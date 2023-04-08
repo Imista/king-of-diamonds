@@ -65,11 +65,15 @@ function connectedTableEvent({ tableCode, playersData }) {
 
     for (const { name, lives } of playersData) {
         const player = document.createRange().createContextualFragment(`
-            <div class="player">
-                <p class="player-name">${name}</p>
+        <div class="player">
+            <div class="player-img-container">
                 <img src="https://robohash.org/${name}.png" alt="" class="player-img">
+            </div>
+            <div class="player-lives-container">
                 <p class="player-lives">${lives}</p>
             </div>
+        </div>
+    
         `);
         playersArea.append(player);
     }
@@ -79,12 +83,15 @@ socket.on("connected_table", (data) => {
     connectedTableEvent(data);
 });
 
-socket.on("new_player", (newPlayerData) => {
+socket.on("new_player", ({ name, lives }) => {
     const player = document.createRange().createContextualFragment(`
     <div class="player">
-        <p class="player-name">${newPlayerData.name}</p>
-        <img src="https://robohash.org/${newPlayerData.name}.png" alt="" class="player-img">
-        <p class="player-lives">${newPlayerData.lives}</p>
+        <div class="player-img-container">
+            <img src="https://robohash.org/${name}.png" alt="" class="player-img">
+        </div>
+        <div class="player-lives-container">
+            <p class="player-lives">${lives}</p>
+        </div>
     </div>
 `);
     playersArea.append(player);
