@@ -122,3 +122,11 @@ socket.on("lives", (playersData) => {
         newPlayer(name, lives, ["lives"]);
     }
 });
+
+socket.on("next_round", (playersData) => {
+    playersArea.innerHTML = "";
+    enableVote();
+    for (const { name } of playersData) {
+        newPlayer(name);
+    }
+});

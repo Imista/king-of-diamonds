@@ -30,6 +30,13 @@ function playerController() {
         players[id].getDamage(damage);
     }
 
+    function execute() {
+        for (const [id, player] of Object.entries(players)) {
+            if (player.lives <= LIVES_LIMIT) delete players[id];
+            else player.vote = -1;
+        }
+    }
+
     function alives() {
         return Object.values(players).filter(({ lives }) => lives > LIVES_LIMIT)
             .length;
@@ -44,7 +51,17 @@ function playerController() {
         else return players[id].data;
     }
 
-    return { add, alives, data, vote, votes, results, damage, everyVoted };
+    return {
+        add,
+        alives,
+        data,
+        vote,
+        votes,
+        results,
+        damage,
+        everyVoted,
+        execute,
+    };
 }
 
 module.exports = { playerController };

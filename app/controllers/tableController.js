@@ -53,6 +53,10 @@ function voteEvent({ io, id, tables, tableCode, vote }) {
         io.to(tableCode).emit("results", results);
         setTimeout(() => {
             io.to(tableCode).emit("lives", table.data());
+            setTimeout(() => {
+                table.execute();
+                io.to(tableCode).emit("next_round", table.data());
+            }, 5000);
         }, 5000);
     }
 }
