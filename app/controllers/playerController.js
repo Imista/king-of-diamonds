@@ -2,6 +2,7 @@ const { Player } = require("../models/playerModel");
 
 function playerController() {
     const players = {};
+    const LIVES_LIMIT = -5;
 
     function add(id) {
         players[id] = new Player();
@@ -19,10 +20,10 @@ function playerController() {
         const winners = Object.values(players)
             .filter(({ vote }) => vote == winVote)
             .map(({ data }) => data);
-        const losers = Object.values(players)
+        Object.values(players)
             .filter(({ vote }) => vote != winVote)
-            .map(({ data }) => data);
-        return { winners, losers };
+            .map((player) => player.getDamage(1));
+        return winners;
     }
 
     function damage(id, damage) {
@@ -30,7 +31,8 @@ function playerController() {
     }
 
     function alives() {
-        return Object.values(players).filter(({ lives }) => lives).length;
+        return Object.values(players).filter(({ lives }) => lives > LIVES_LIMIT)
+            .length;
     }
 
     function everyVoted() {

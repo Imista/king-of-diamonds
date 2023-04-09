@@ -3,7 +3,7 @@ class Player {
         this._name = Math.floor(Math.random() * Date.now())
             .toString(16)
             .slice(0, 5);
-        this._lives = 5;
+        this._lives = 0;
         this._vote = -1;
     }
 

@@ -85,9 +85,11 @@ header h1 {
     padding: 8px;
     text-align: center;
     /* width: 120px; */
+    box-sizing: border-box;
+    border: solid 4px none;
   }
   .player.winner {
-    border: solid #333 4px;
+    border: solid 4px #333;
     border-radius: 2px;
   }
   
@@ -107,7 +109,7 @@ header h1 {
     object-fit: cover;
   }
   
-  .player-lives-container {
+  .player-data-container {
     border: 1px solid #ccc;
     background-color: white;
     border-radius: 5px;
@@ -120,9 +122,12 @@ header h1 {
     height: 30px;
   }
   
-  .player-lives {
+  .player-data {
     font-size: 16px;
     font-weight: bold;
+    color: #4f4caf;
+  }
+  .player-data.lives {
     color: #af4c4c;
   }
   

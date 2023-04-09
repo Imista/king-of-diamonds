@@ -38,7 +38,10 @@ function startTableEvent({ io, tables, socket, tableCode }) {
     if (tables[tableCode].alives() >= MINIMUM_PLAYERS) {
         io.to(tableCode).emit("start_table");
     } else
-        sendErrorMessage(socket, `The table needs minimun 5 players to start.`);
+        sendErrorMessage(
+            socket,
+            `The table needs minimun ${MINIMUM_PLAYERS} players to start.`
+        );
 }
 
 function voteEvent({ io, id, tables, tableCode, vote }) {
@@ -48,6 +51,9 @@ function voteEvent({ io, id, tables, tableCode, vote }) {
         const winVote = getWinVote(table.votes());
         const results = table.results(winVote);
         io.to(tableCode).emit("results", results);
+        setTimeout(() => {
+            io.to(tableCode).emit("lives", table.data());
+        }, 5000);
     }
 }
 
