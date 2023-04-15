@@ -59,7 +59,11 @@ function voteEvent({ io, id, tables, tableCode, vote }) {
         setTimeout(() => {
             io.to(tableCode).emit("lives", table.data());
             setTimeout(() => {
-                table.execute();
+                const players_executed = table.execute();
+                for (const player_id of players_executed) {
+                    io.to(tableCode).emit("excute", player_id);
+                }
+                table.restart();
                 io.to(tableCode).emit("next_round", table.data());
             }, 5000);
         }, 7000);

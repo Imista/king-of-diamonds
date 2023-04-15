@@ -2,7 +2,7 @@ const { Player } = require("../models/playerModel");
 
 function playerController() {
     const players = {};
-    const LIVES_LIMIT = -5;
+    const LIVES_LIMIT = -2;
 
     function add(id) {
         players[id] = new Player(id);
@@ -30,11 +30,25 @@ function playerController() {
         players[id].getDamage(damage);
     }
 
-    function execute() {
+    function restart() {
         for (const [id, player] of Object.entries(players)) {
             if (player.lives <= LIVES_LIMIT) delete players[id];
             else player.vote = -1;
         }
+    }
+    function restart() {
+        for (const player of Object.values(players)) player.vote = -1;
+    }
+
+    function execute() {
+        const players_executed = [];
+        for (const [id, player] of Object.entries(players)) {
+            if (player.lives <= LIVES_LIMIT) {
+                players_executed.push(id);
+                delete players[id];
+            }
+        }
+        return players_executed;
     }
 
     function alives() {
@@ -60,6 +74,7 @@ function playerController() {
         results,
         damage,
         everyVoted,
+        restart,
         execute,
     };
 }

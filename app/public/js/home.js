@@ -97,9 +97,10 @@ function connectedTableEvent({ tableCode, playersData }) {
 }
 
 function newPlayer(name, text = "-", classes = []) {
-
     const player = document.createRange().createContextualFragment(`
-    <div class="player ${classes.join(" ")} ${name == playerData.id && "main"}"}">
+    <div class="player ${classes.join(" ")} ${
+        name == playerData.id && "main"
+    }"}">
         <div class="player-img-container">
             <img src="https://robohash.org/${name}.png" alt="" class="player-img">
         </div>
@@ -150,4 +151,8 @@ socket.on("next_round", (playersData) => {
     for (const { name } of playersData) {
         newPlayer(name);
     }
+});
+
+socket.on("excute", (player_id) => {
+    if (player_id == playerData.id) alert("You died.");
 });
