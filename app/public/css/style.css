@@ -6,6 +6,16 @@ body {
     background-color: #f2f2f2;
 }
 
+button:disabled {
+    opacity: 0.5;
+}
+
+input[type="text"]:disabled,
+input[type="number"]:disabled {
+    background-color: #ccc;
+    color: #888;
+}
+
 /* Estilos del encabezado */
 header {
     background-color: #333;
@@ -15,6 +25,11 @@ header {
 
 header h1 {
     margin: 0;
+}
+
+#code {
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 /* Estilos del área de la mesa */

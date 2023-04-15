@@ -38,8 +38,8 @@ const enableTable = () => {
 
 const enableMultiplication = (average) => {
     multiplicationArea.classList.remove("off");
-    averageSpan.innerHTML = average;
-    resultSpan.innerHTML = average * 0.8;
+    averageSpan.innerHTML = average.toFixed(1);
+    resultSpan.innerHTML = (average * 0.8).toFixed(1);
 };
 
 const disableMultiplication = () => {
@@ -70,13 +70,21 @@ voteButton.addEventListener("click", () => {
 });
 
 startTableButton.addEventListener("click", () => {
-    console.log("A");
     socket.emit("start_table", playerData.tableCode);
 });
 
 //Server events
 function connectedTableEvent({ tableCode, playersData }) {
-    stateText.textContent = `connected to ${tableCode}`;
+    stateText.innerHTML = `connected to <span id="code">${tableCode}</span>`;
+
+    const code = document.getElementById("code");
+
+    code.addEventListener("click", () => {
+        navigator.clipboard
+            .writeText(code.innerText)
+            .then(() => alert("Text copied to clipboard!"));
+    });
+
     playerData.tableCode = tableCode;
 
     tableInput.value = "";
@@ -89,6 +97,7 @@ function connectedTableEvent({ tableCode, playersData }) {
 }
 
 function newPlayer(name, text = "-", classes = []) {
+
     const player = document.createRange().createContextualFragment(`
     <div class="player ${classes.join(" ")}"}">
         <div class="player-img-container">
@@ -124,9 +133,6 @@ socket.on("results", ({ average, results }) => {
     results.forEach(({ name, vote }) => {
         newPlayer(name, vote, ["winner"]);
     });
-    // losers.forEach(({ name, vote }) => {
-    //     newPlayer(name, vote);
-    // });
     enableMultiplication(average);
 });
 

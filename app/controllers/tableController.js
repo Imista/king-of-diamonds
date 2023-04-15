@@ -1,6 +1,7 @@
 const { playerController } = require("./playerController");
 
 const MINIMUM_PLAYERS = 2;
+const PLAYING_TABLES = [];
 
 function createTableEvent({ tables, socket, id }) {
     const tableCode = Math.floor(Math.random() * Date.now())
@@ -17,7 +18,10 @@ function createTableEvent({ tables, socket, id }) {
 }
 
 function connectTableEvent({ tables, socket, id, tableCode }) {
-    if (tables.hasOwnProperty(tableCode)) {
+    if (
+        tables.hasOwnProperty(tableCode) &&
+        PLAYING_TABLES.indexOf(tableCode) == -1
+    ) {
         const table = tables[tableCode];
         table.add(id);
         socket.to(tableCode).emit("new_player", table.data(id));
@@ -27,16 +31,14 @@ function connectTableEvent({ tables, socket, id, tableCode }) {
             playersData: table.data(),
         });
     } else {
-        sendErrorMessage(
-            socket,
-            `The table with code ${tableCode} does not exist.`
-        );
+        sendErrorMessage(socket, `We can't connect to ${tableCode} table.`);
     }
 }
 
 function startTableEvent({ io, tables, socket, tableCode }) {
     if (tables[tableCode].alives() >= MINIMUM_PLAYERS) {
         io.to(tableCode).emit("start_table");
+        PLAYING_TABLES.push(tableCode);
     } else
         sendErrorMessage(
             socket,
