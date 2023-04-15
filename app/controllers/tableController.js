@@ -48,16 +48,19 @@ function voteEvent({ io, id, tables, tableCode, vote }) {
     const table = tables[tableCode];
     table.vote(id, vote);
     if (table.everyVoted()) {
-        const winVote = getWinVote(table.votes());
+        const votes = table.votes();
+        const average =
+            votes.reduce((sum, vote) => (sum += vote)) / votes.length;
+        const winVote = getWinVote(votes, average);
         const results = table.results(winVote);
-        io.to(tableCode).emit("results", results);
+        io.to(tableCode).emit("results", { average, results });
         setTimeout(() => {
             io.to(tableCode).emit("lives", table.data());
             setTimeout(() => {
                 table.execute();
                 io.to(tableCode).emit("next_round", table.data());
             }, 5000);
-        }, 5000);
+        }, 7000);
     }
 }
 
@@ -65,10 +68,8 @@ function sendErrorMessage(socket, message) {
     socket.emit("error_table", message);
 }
 
-function getWinVote(votes) {
-    const winNumber = Math.round(
-        (votes.reduce((sum, vote) => (sum += vote)) / votes.length) * 0.8
-    );
+function getWinVote(votes, average) {
+    const winNumber = Math.round(average * 0.8);
     const closestVote = votes.reduce((closest, vote) =>
         Math.abs(vote - winNumber) < Math.abs(closest - winNumber)
             ? vote

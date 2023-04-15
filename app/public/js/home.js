@@ -7,6 +7,9 @@ const tableInput = document.querySelector("#table-input");
 const voteButton = document.querySelector("#vote");
 const voteInput = document.querySelector("#vote-input");
 const playersArea = document.querySelector(".players-area");
+const multiplicationArea = document.querySelector(".multiplication-area");
+const averageSpan = document.querySelector("#average");
+const resultSpan = document.querySelector("#result");
 
 const playerData = {
     id: Math.floor(Math.random() * Date.now()).toString(16),
@@ -31,6 +34,16 @@ const enableTable = () => {
     tableInput.disabled = false;
     joinTableButton.disabled = false;
     createTableButton.disabled = false;
+};
+
+const enableMultiplication = (average) => {
+    multiplicationArea.classList.remove("off");
+    averageSpan.innerHTML = average;
+    resultSpan.innerHTML = average * 0.8;
+};
+
+const disableMultiplication = () => {
+    multiplicationArea.classList.add("off");
 };
 
 //Client events
@@ -106,14 +119,15 @@ socket.on("start_table", () => {
     disableTable();
 });
 
-socket.on("results", (winners) => {
+socket.on("results", ({ average, results }) => {
     playersArea.innerHTML = "";
-    winners.forEach(({ name, vote }) => {
+    results.forEach(({ name, vote }) => {
         newPlayer(name, vote, ["winner"]);
     });
     // losers.forEach(({ name, vote }) => {
     //     newPlayer(name, vote);
     // });
+    enableMultiplication(average);
 });
 
 socket.on("lives", (playersData) => {
@@ -121,6 +135,7 @@ socket.on("lives", (playersData) => {
     for (const { name, lives } of playersData) {
         newPlayer(name, lives, ["lives"]);
     }
+    disableMultiplication();
 });
 
 socket.on("next_round", (playersData) => {
