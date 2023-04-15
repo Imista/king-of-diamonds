@@ -1,4 +1,3 @@
-// const cookieParser = require("cookie-parser");
 const express = require("express");
 const path = require("path");
 const { router } = require("./routes");
@@ -26,5 +25,3 @@ httpServer.listen(app.get("port"), () => {
 
 //Call socket.io server
 server(httpServer);
-
-//Add routes

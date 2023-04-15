@@ -1,6 +1,6 @@
 const { playerController } = require("./playerController");
 
-const MINIMUM_PLAYERS = 2;
+const MINIMUM_PLAYERS = 4;
 const PLAYING_TABLES = [];
 
 function createTableEvent({ tables, socket, id }) {

@@ -2,7 +2,7 @@ const { Player } = require("../models/playerModel");
 
 function playerController() {
     const players = {};
-    const LIVES_LIMIT = -2;
+    const LIVES_LIMIT = -5;
 
     function add(id) {
         players[id] = new Player(id);
