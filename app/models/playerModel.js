@@ -1,8 +1,6 @@
 class Player {
-    constructor() {
-        this._name = Math.floor(Math.random() * Date.now())
-            .toString(16)
-            .slice(0, 5);
+    constructor(id) {
+        this._name = id;
         this._lives = 0;
         this._vote = -1;
     }

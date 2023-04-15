@@ -105,10 +105,16 @@ header h1 {
     /* width: 120px; */
     box-sizing: border-box;
     border: solid 4px none;
+    border-radius: 12px;
 }
+
+.player.main {
+    background-color: #d0d0d0;
+}
+
 .player.winner {
     border: solid 4px #333;
-    border-radius: 2px;
+    /* border-radius: 2px; */
 }
 
 .player-img-container {
@@ -145,7 +151,7 @@ header h1 {
     font-weight: bold;
     color: #4f4caf;
 }
-.player-data.lives {
+.player.lives .player-data {
     color: #af4c4c;
 }
 

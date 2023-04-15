@@ -99,7 +99,7 @@ function connectedTableEvent({ tableCode, playersData }) {
 function newPlayer(name, text = "-", classes = []) {
 
     const player = document.createRange().createContextualFragment(`
-    <div class="player ${classes.join(" ")}"}">
+    <div class="player ${classes.join(" ")} ${name == playerData.id && "main"}"}">
         <div class="player-img-container">
             <img src="https://robohash.org/${name}.png" alt="" class="player-img">
         </div>

@@ -5,7 +5,7 @@ function playerController() {
     const LIVES_LIMIT = -5;
 
     function add(id) {
-        players[id] = new Player();
+        players[id] = new Player(id);
     }
 
     function vote(id, vote) {
