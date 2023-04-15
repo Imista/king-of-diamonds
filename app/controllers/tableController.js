@@ -63,8 +63,12 @@ function voteEvent({ io, id, tables, tableCode, vote }) {
                 for (const player_id of players_executed) {
                     io.to(tableCode).emit("excute", player_id);
                 }
-                table.restart();
-                io.to(tableCode).emit("next_round", table.data());
+                if (tables[tableCode].alives() > 1) {
+                    table.restart();
+                    io.to(tableCode).emit("next_round", table.data());
+                } else {
+                    io.to(tableCode).emit("end_game", table.data());
+                }
             }, 5000);
         }, 7000);
     }

@@ -13,6 +13,7 @@ const resultSpan = document.querySelector("#result");
 
 const playerData = {
     id: Math.floor(Math.random() * Date.now()).toString(16),
+    isAlive: true,
 };
 
 //Functions
@@ -21,8 +22,10 @@ const disableVote = () => {
     voteInput.disabled = true;
 };
 const enableVote = () => {
-    voteButton.disabled = false;
-    voteInput.disabled = false;
+    if (playerData.isAlive) {
+        voteButton.disabled = false;
+        voteInput.disabled = false;
+    }
 };
 const disableTable = () => {
     tableInput.disabled = true;
@@ -154,5 +157,15 @@ socket.on("next_round", (playersData) => {
 });
 
 socket.on("excute", (player_id) => {
-    if (player_id == playerData.id) alert("You died.");
+    if (player_id == playerData.id) {
+        playerData.isAlive = false;
+        alert("You died.");
+        disableVote();
+    }
+});
+
+socket.on("end_game", (playersData) => {
+    const { name, lives } = playersData[0];
+    playersArea.innerHTML = "";
+    newPlayer(name, lives, ["winner"]);
 });
